@@ -1,13 +1,16 @@
 // src/components/PIList.tsx
 import React from "react";
+import Link from "next/link"; // Import Link
 import type { PIStatus } from "../app/dashboard/page";
 
+// --- RE-ADDED FULL PROPS INTERFACE ---
 interface PIListProps {
   pis: string[];
   selectedPIs: Set<string>;
   setSelectedPIs: React.Dispatch<React.SetStateAction<Set<string>>>;
   piStatuses: PIStatus;
 }
+// --- END RE-ADDED PROPS ---
 
 const statusMap = {
   complete: { icon: "✅", text: "Data Submitted", color: "#28a745" },
@@ -30,6 +33,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     background: "#f8f9fa",
     borderBottom: "1px solid #dee2e6",
   },
+  // --- STYLE FOR CHECKBOX (RE-ADDED) ---
   headerCheckbox: {
     marginRight: "1rem",
     transform: "scale(1.2)",
@@ -49,6 +53,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: "1rem 1.5rem",
     borderBottom: "1px solid #dee2e6",
   },
+  // --- STYLE FOR CHECKBOX (RE-ADDED) ---
   piItemCheckbox: {
     marginRight: "1rem",
     transform: "scale(1.2)",
@@ -63,6 +68,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     gap: "0.5rem",
   },
+  // --- STYLE FOR CLICKABLE LINK ---
+  linkStyle: {
+    textDecoration: "none",
+    color: "#007bff",
+    fontWeight: 500,
+  },
 };
 
 export default function PIList({
@@ -71,6 +82,7 @@ export default function PIList({
   setSelectedPIs,
   piStatuses,
 }: PIListProps) {
+  // --- RE-ADDED SELECTION HANDLERS ---
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setSelectedPIs(new Set(pis));
@@ -88,10 +100,12 @@ export default function PIList({
     }
     setSelectedPIs(newSelection);
   };
+  // --- END RE-ADDED SELECTION HANDLERS ---
 
   return (
     <div style={styles.piListContainer}>
       <div style={styles.piListHeader}>
+        {/* RE-ADDED SELECT ALL CHECKBOX */}
         <input
           type="checkbox"
           style={styles.headerCheckbox}
@@ -107,13 +121,19 @@ export default function PIList({
 
         return (
           <div key={pi} style={styles.piItem}>
+            {/* RE-ADDED INDIVIDUAL CHECKBOX */}
             <input
               type="checkbox"
               style={styles.piItemCheckbox}
               checked={selectedPIs.has(pi)}
               onChange={() => handleSelectPI(pi)}
             />
-            <div style={styles.piName}>{pi}</div>
+            {/* PI NAME IS NOW A LINK TO THE DETAIL PAGE */}
+            <div style={styles.piName}>
+              <Link href={`/dashboard/pi/${pi}`} passHref>
+                <a style={styles.linkStyle}>{pi}</a>
+              </Link>
+            </div>
             <div style={{ ...styles.piStatus, color }}>
               <span>{icon}</span>
               <span>{text}</span>

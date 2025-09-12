@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const router = useRouter();
 
   const [pis, setPis] = useState<string[]>([]);
+  // --- RE-ADDED STATE ---
   const [selectedPIs, setSelectedPIs] = useState<Set<string>>(new Set());
   const [piStatuses, setPiStatuses] = useState<PIStatus>({});
   const [filters, setFilters] = useState({
@@ -24,6 +25,7 @@ export default function DashboardPage() {
     year: new Date().getFullYear(),
   });
   const [statusMessage, setStatusMessage] = useState("");
+  // --- END RE-ADDED STATE ---
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -67,6 +69,7 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [user, pis, filters.month, filters.year]);
 
+  // --- RE-ADDED FUNCTIONS ---
   const handleRequestData = async () => {
     if (selectedPIs.size === 0) return;
     setStatusMessage("Sending requests...");
@@ -99,7 +102,6 @@ export default function DashboardPage() {
       const piParams = Array.from(selectedPIs).join(",");
       const url = `${process.env.NEXT_PUBLIC_API_BASE}/hr/download-report?month=${filters.month}&year=${filters.year}&piUsernames=${piParams}`;
 
-      // Use fetch to get the file as a blob
       const response = await fetch(url, { headers: api.getHeaders() });
 
       if (!response.ok) {
@@ -130,6 +132,7 @@ export default function DashboardPage() {
       setTimeout(() => setStatusMessage(""), 3000);
     }
   };
+  // --- END RE-ADDED FUNCTIONS ---
 
   if (isLoading || !user) {
     return <div className="loading">Loading...</div>;
@@ -173,6 +176,7 @@ export default function DashboardPage() {
               <option value="2024">2024</option>
             </select>
           </div>
+          {/* --- RE-ADDED ACTION BUTTONS --- */}
           <div className="action-buttons">
             <button
               className="request-btn"
@@ -189,6 +193,7 @@ export default function DashboardPage() {
               Download Report
             </button>
           </div>
+          {/* --- END RE-ADDED ACTION BUTTONS --- */}
         </div>
 
         {statusMessage && <p className="status-message">{statusMessage}</p>}
