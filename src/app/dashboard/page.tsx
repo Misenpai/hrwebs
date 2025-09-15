@@ -1,4 +1,3 @@
-// src/app/dashboard/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -17,7 +16,6 @@ export default function DashboardPage() {
   const router = useRouter();
 
   const [pis, setPis] = useState<string[]>([]);
-  // --- RE-ADDED STATE ---
   const [selectedPIs, setSelectedPIs] = useState<Set<string>>(new Set());
   const [piStatuses, setPiStatuses] = useState<PIStatus>({});
   const [filters, setFilters] = useState({
@@ -25,7 +23,6 @@ export default function DashboardPage() {
     year: new Date().getFullYear(),
   });
   const [statusMessage, setStatusMessage] = useState("");
-  // --- END RE-ADDED STATE ---
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -64,12 +61,11 @@ export default function DashboardPage() {
     };
 
     fetchStatuses();
-    const interval = setInterval(fetchStatuses, 5000); // Poll every 5 seconds
+    const interval = setInterval(fetchStatuses, 5000);
 
     return () => clearInterval(interval);
   }, [user, pis, filters.month, filters.year]);
 
-  // --- RE-ADDED FUNCTIONS ---
   const handleRequestData = async () => {
     if (selectedPIs.size === 0) return;
     setStatusMessage("Sending requests...");
@@ -81,7 +77,6 @@ export default function DashboardPage() {
       });
       if (response.success) {
         setStatusMessage("Requests sent successfully!");
-        // Update status locally for immediate feedback
         const newStatuses = { ...piStatuses };
         selectedPIs.forEach((pi) => {
           newStatuses[pi] = "requested";
@@ -132,10 +127,15 @@ export default function DashboardPage() {
       setTimeout(() => setStatusMessage(""), 3000);
     }
   };
-  // --- END RE-ADDED FUNCTIONS ---
 
   if (isLoading || !user) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-lime-200">
+        <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+          <p className="text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   const canDownload = Array.from(selectedPIs).every(
@@ -143,60 +143,78 @@ export default function DashboardPage() {
   );
 
   return (
-    <>
+    <div className="min-h-screen bg-lime-200">
       <Header />
-      <main className="main-content">
-        <div className="dashboard-controls">
-          <div className="control-group">
-            <label htmlFor="month-select">Month</label>
-            <select
-              id="month-select"
-              value={filters.month}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, month: +e.target.value }))
-              }
-            >
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {new Date(0, i).toLocaleString("en-US", { month: "long" })}
-                </option>
-              ))}
-            </select>
+      <main className="container mx-auto p-6">
+        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] p-6 mb-6">
+          <div className="flex flex-wrap gap-4 items-end">
+            <div>
+              <label
+                htmlFor="month-select"
+                className="block text-sm font-bold mb-2"
+              >
+                Month
+              </label>
+              <select
+                id="month-select"
+                value={filters.month}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, month: +e.target.value }))
+                }
+                className="border-2 border-black p-2 bg-white hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+              >
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {new Date(0, i).toLocaleString("en-US", { month: "long" })}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="year-select"
+                className="block text-sm font-bold mb-2"
+              >
+                Year
+              </label>
+              <select
+                id="year-select"
+                value={filters.year}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, year: +e.target.value }))
+                }
+                className="border-2 border-black p-2 bg-white hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+              >
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+              </select>
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={handleRequestData}
+                disabled={selectedPIs.size === 0}
+                className="h-12 px-5 border-black border-2 bg-orange-200 hover:bg-orange-300 active:bg-orange-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] disabled:border-gray-400 disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:shadow-none font-bold"
+              >
+                Request Data
+              </button>
+              <button
+                onClick={handleDownloadReport}
+                disabled={!canDownload || selectedPIs.size === 0}
+                className="h-12 px-5 border-black border-2 bg-lime-200 hover:bg-lime-300 active:bg-lime-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] disabled:border-gray-400 disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:shadow-none font-bold"
+              >
+                Download Report
+              </button>
+            </div>
           </div>
-          <div className="control-group">
-            <label htmlFor="year-select">Year</label>
-            <select
-              id="year-select"
-              value={filters.year}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, year: +e.target.value }))
-              }
-            >
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-            </select>
-          </div>
-          {/* --- RE-ADDED ACTION BUTTONS --- */}
-          <div className="action-buttons">
-            <button
-              className="request-btn"
-              onClick={handleRequestData}
-              disabled={selectedPIs.size === 0}
-            >
-              Request Data
-            </button>
-            <button
-              className="download-btn"
-              onClick={handleDownloadReport}
-              disabled={!canDownload || selectedPIs.size === 0}
-            >
-              Download Report
-            </button>
-          </div>
-          {/* --- END RE-ADDED ACTION BUTTONS --- */}
         </div>
 
-        {statusMessage && <p className="status-message">{statusMessage}</p>}
+        {statusMessage && (
+          <div className="bg-cyan-200 border-2 border-black p-4 mb-6 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+            <p className="font-bold text-center">{statusMessage}</p>
+          </div>
+        )}
 
         <PIList
           pis={pis}
@@ -205,6 +223,6 @@ export default function DashboardPage() {
           piStatuses={piStatuses}
         />
       </main>
-    </>
+    </div>
   );
 }
