@@ -47,6 +47,12 @@ export default function PIDetailPage() {
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear(),
   });
+  const [isClient, setIsClient] = useState(false);
+
+  // Fix hydration issue by ensuring client-side rendering for dynamic content
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -56,7 +62,7 @@ export default function PIDetailPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user || !piUsername) return;
+      if (!user || !piUsername || !isClient) return;
 
       setLoading(true);
       setError("");
@@ -90,7 +96,7 @@ export default function PIDetailPage() {
     };
 
     fetchData();
-  }, [user, piUsername, filters.month, filters.year]);
+  }, [user, piUsername, filters.month, filters.year, isClient]);
 
   const handleDownload = async () => {
     try {
@@ -138,14 +144,21 @@ export default function PIDetailPage() {
     });
   };
 
-  if (authLoading || !user) {
-    return <div className="loading">Loading...</div>;
+  // Show loading state while auth is checking or client is not ready
+  if (authLoading || !user || !isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-cyan-200">
+        <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+          <p className="text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-cyan-200">
       <Header />
-      <main className="main-content p-6">
+      <main className="container mx-auto p-6">
         {/* Back button and title */}
         <div className="mb-6">
           <Link
@@ -160,16 +173,21 @@ export default function PIDetailPage() {
         </div>
 
         {/* Controls */}
-        <div className="dashboard-controls mb-6">
-          <div className="control-group">
-            <label htmlFor="month-select">Month</label>
+        <div className="flex gap-4 items-end mb-6">
+          <div>
+            <label
+              htmlFor="month-select"
+              className="block text-sm font-bold mb-2"
+            >
+              Month
+            </label>
             <select
               id="month-select"
               value={filters.month}
               onChange={(e) =>
                 setFilters((f) => ({ ...f, month: +e.target.value }))
               }
-              className="border-2 border-black p-2"
+              className="border-2 border-black p-2 bg-white"
             >
               {Array.from({ length: 12 }, (_, i) => (
                 <option key={i + 1} value={i + 1}>
@@ -178,15 +196,20 @@ export default function PIDetailPage() {
               ))}
             </select>
           </div>
-          <div className="control-group">
-            <label htmlFor="year-select">Year</label>
+          <div>
+            <label
+              htmlFor="year-select"
+              className="block text-sm font-bold mb-2"
+            >
+              Year
+            </label>
             <select
               id="year-select"
               value={filters.year}
               onChange={(e) =>
                 setFilters((f) => ({ ...f, year: +e.target.value }))
               }
-              className="border-2 border-black p-2"
+              className="border-2 border-black p-2 bg-white"
             >
               <option value="2025">2025</option>
               <option value="2024">2024</option>
@@ -194,7 +217,7 @@ export default function PIDetailPage() {
           </div>
           <button
             onClick={handleDownload}
-            className="download-btn bg-green-500 text-white px-4 py-2 border-2 border-black hover:bg-green-600"
+            className="h-10 px-4 bg-green-500 text-white border-2 border-black hover:bg-green-600 font-bold"
           >
             Download Report
           </button>
@@ -214,16 +237,13 @@ export default function PIDetailPage() {
         {data && !loading && (
           <div className="space-y-6">
             {/* Summary */}
-            <div className="bg-blue-100 border-2 border-black p-4">
-              <p className="text-lg">
-                <strong>
-                  Total Working Days in{" "}
-                  {new Date(0, filters.month - 1).toLocaleString("en-US", {
-                    month: "long",
-                  })}{" "}
-                  {filters.year}:
-                </strong>{" "}
-                {data.totalWorkingDays}
+            <div className="bg-blue-100 border-2 border-black p-4 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+              <p className="text-lg font-bold">
+                Total Working Days in{" "}
+                {new Date(0, filters.month - 1).toLocaleString("en-US", {
+                  month: "long",
+                })}{" "}
+                {filters.year}: {data.totalWorkingDays}
               </p>
               <p className="text-sm text-gray-600">
                 (Excluding weekends and holidays)
@@ -351,6 +371,6 @@ export default function PIDetailPage() {
           </div>
         )}
       </main>
-    </>
+    </div>
   );
 }
