@@ -33,8 +33,8 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchPIs = async () => {
       try {
-        const response = await api.get("/hr/pis");
-        if (response.success) {
+        const response = await api.get<string[]>("/hr/pis");
+        if (response.success && response.data) {
           setPis(response.data);
         }
       } catch (error) {
@@ -49,10 +49,10 @@ export default function DashboardPage() {
 
     const fetchStatuses = async () => {
       try {
-        const response = await api.get(
+        const response = await api.get<PIStatus>(
           `/hr/submission-status?month=${filters.month}&year=${filters.year}`,
         );
-        if (response.success) {
+        if (response.success && response.data) {
           setPiStatuses(response.data);
         }
       } catch (error) {
@@ -83,7 +83,7 @@ export default function DashboardPage() {
         });
         setPiStatuses(newStatuses);
       }
-    } catch (error) {
+    } catch {
       setStatusMessage("Failed to send requests.");
     } finally {
       setTimeout(() => setStatusMessage(""), 3000);

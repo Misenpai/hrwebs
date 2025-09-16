@@ -1,7 +1,11 @@
-// src/hooks/useAuth.tsx
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { api } from "../utils/api";
+
+interface LoginResponse {
+  token: string;
+  message?: string;
+}
 
 interface AuthContextType {
   user: string | null;
@@ -19,7 +23,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem("hr_token");
     if (token) {
-      // In a real app, you'd verify the token. For this, we'll just trust it.
       setUser("HRUser");
     }
     setIsLoading(false);
@@ -27,17 +30,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, pass: string) => {
     try {
-      const response = await api.post("/hr/login", {
+      const response = await api.post<LoginResponse>("/hr/login", {
         username,
         password: pass,
       });
-      if (response.success) {
+      if (response.success && response.token) {
         localStorage.setItem("hr_token", response.token);
         setUser(username);
         return true;
       }
       return false;
-    } catch (error) {
+    } catch {
       return false;
     }
   };
