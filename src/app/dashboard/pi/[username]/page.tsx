@@ -147,16 +147,16 @@ export default function PIDetailPage() {
   // Show loading state while auth is checking or client is not ready
   if (authLoading || !user || !isClient) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-cyan-200">
-        <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)]">
-          <p className="text-2xl font-bold">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="bg-white border-2 border-slate-700 p-8 shadow-[4px_4px_0px_rgba(51,65,85,0.3)] rounded-lg">
+          <p className="text-2xl font-bold text-slate-800">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-cyan-200">
+    <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="container mx-auto p-6">
         {/* Back button and title */}
@@ -167,7 +167,7 @@ export default function PIDetailPage() {
           >
             ← Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold mt-4">
+          <h1 className="text-3xl font-bold mt-4 text-slate-800">
             Attendance Details: {piUsername}
           </h1>
         </div>
@@ -177,7 +177,7 @@ export default function PIDetailPage() {
           <div>
             <label
               htmlFor="month-select"
-              className="block text-sm font-bold mb-2"
+              className="block text-sm font-bold mb-2 text-slate-700"
             >
               Month
             </label>
@@ -187,7 +187,7 @@ export default function PIDetailPage() {
               onChange={(e) =>
                 setFilters((f) => ({ ...f, month: +e.target.value }))
               }
-              className="border-2 border-black p-2 bg-white"
+              className="border-2 border-slate-300 p-2 bg-white rounded focus:border-slate-500"
             >
               {Array.from({ length: 12 }, (_, i) => (
                 <option key={i + 1} value={i + 1}>
@@ -199,7 +199,7 @@ export default function PIDetailPage() {
           <div>
             <label
               htmlFor="year-select"
-              className="block text-sm font-bold mb-2"
+              className="block text-sm font-bold mb-2 text-slate-700"
             >
               Year
             </label>
@@ -209,7 +209,7 @@ export default function PIDetailPage() {
               onChange={(e) =>
                 setFilters((f) => ({ ...f, year: +e.target.value }))
               }
-              className="border-2 border-black p-2 bg-white"
+              className="border-2 border-slate-300 p-2 bg-white rounded focus:border-slate-500"
             >
               <option value="2025">2025</option>
               <option value="2024">2024</option>
@@ -217,7 +217,7 @@ export default function PIDetailPage() {
           </div>
           <button
             onClick={handleDownload}
-            className="h-10 px-4 bg-green-500 text-white border-2 border-black hover:bg-green-600 font-bold"
+            className="h-10 px-4 bg-green-100 text-slate-800 border-2 border-slate-700 hover:bg-green-200 font-bold rounded hover:shadow-[2px_2px_0px_rgba(51,65,85,0.2)] transition-all"
           >
             Download Report
           </button>
@@ -225,11 +225,13 @@ export default function PIDetailPage() {
 
         {/* Loading/Error states */}
         {loading && (
-          <div className="text-center py-8">Loading attendance data...</div>
+          <div className="text-center py-8 text-slate-600">
+            Loading attendance data...
+          </div>
         )}
         {error && (
-          <div className="bg-red-100 border-2 border-red-500 p-4 mb-4">
-            {error}
+          <div className="bg-red-50 border-2 border-red-300 p-4 mb-4 rounded-lg">
+            <p className="text-red-700">{error}</p>
           </div>
         )}
 
@@ -237,51 +239,65 @@ export default function PIDetailPage() {
         {data && !loading && (
           <div className="space-y-6">
             {/* Summary */}
-            <div className="bg-blue-100 border-2 border-black p-4 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-              <p className="text-lg font-bold">
+            <div className="bg-blue-50 border-2 border-slate-300 p-4 shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg">
+              <p className="text-lg font-bold text-slate-800">
                 Total Working Days in{" "}
                 {new Date(0, filters.month - 1).toLocaleString("en-US", {
                   month: "long",
                 })}{" "}
                 {filters.year}: {data.totalWorkingDays}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-slate-600">
                 (Excluding weekends and holidays)
               </p>
             </div>
 
             {/* Users table */}
-            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-              <div className="bg-yellow-200 border-b-2 border-black p-4">
-                <h2 className="text-xl font-bold">Project Staff Attendance</h2>
+            <div className="bg-white border-2 border-slate-300 shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg overflow-hidden">
+              <div className="bg-slate-100 border-b-2 border-slate-300 p-4">
+                <h2 className="text-xl font-bold text-slate-800">
+                  Project Staff Attendance
+                </h2>
               </div>
 
               <div className="p-4">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b-2 border-black">
-                      <th className="text-left p-3">Username</th>
-                      <th className="text-center p-3">Working Days</th>
-                      <th className="text-center p-3">Present Days</th>
-                      <th className="text-center p-3">Absent Days</th>
-                      <th className="text-center p-3">Actions</th>
+                    <tr className="border-b-2 border-slate-300">
+                      <th className="text-left p-3 text-slate-700">Username</th>
+                      <th className="text-center p-3 text-slate-700">
+                        Working Days
+                      </th>
+                      <th className="text-center p-3 text-slate-700">
+                        Present Days
+                      </th>
+                      <th className="text-center p-3 text-slate-700">
+                        Absent Days
+                      </th>
+                      <th className="text-center p-3 text-slate-700">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.users.map((user) => (
                       <tr
                         key={user.username}
-                        className="border-b border-gray-300 hover:bg-gray-50"
+                        className="border-b border-slate-200 hover:bg-slate-50"
                       >
-                        <td className="p-3 font-medium">{user.username}</td>
-                        <td className="text-center p-3">{user.workingDays}</td>
+                        <td className="p-3 font-medium text-slate-800">
+                          {user.username}
+                        </td>
+                        <td className="text-center p-3 text-slate-700">
+                          {user.workingDays}
+                        </td>
                         <td className="text-center p-3">
-                          <span className="bg-green-200 px-2 py-1 rounded">
+                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
                             {user.presentDays}
                           </span>
                         </td>
                         <td className="text-center p-3">
-                          <span className="bg-red-200 px-2 py-1 rounded">
+                          <span className="bg-red-100 text-red-800 px-2 py-1 rounded">
                             {user.absentDays}
                           </span>
                         </td>
@@ -294,7 +310,7 @@ export default function PIDetailPage() {
                                   : user.username,
                               )
                             }
-                            className="bg-blue-500 text-white px-3 py-1 border-2 border-black hover:bg-blue-600"
+                            className="bg-blue-100 text-slate-800 px-3 py-1 border-2 border-slate-700 hover:bg-blue-200 rounded hover:shadow-[1px_1px_0px_rgba(51,65,85,0.2)] transition-all"
                           >
                             {selectedUser === user.username ? "Hide" : "View"}{" "}
                             Details
@@ -309,9 +325,9 @@ export default function PIDetailPage() {
 
             {/* Selected user attendance details */}
             {selectedUser && (
-              <div className="bg-white border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                <div className="bg-cyan-200 border-b-2 border-black p-4">
-                  <h3 className="text-lg font-bold">
+              <div className="bg-white border-2 border-slate-300 shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg overflow-hidden">
+                <div className="bg-slate-100 border-b-2 border-slate-300 p-4">
+                  <h3 className="text-lg font-bold text-slate-800">
                     Daily Attendance: {selectedUser}
                   </h3>
                 </div>
@@ -330,21 +346,25 @@ export default function PIDetailPage() {
                         .map((att, idx) => (
                           <div
                             key={idx}
-                            className="flex-shrink-0 border-2 border-black p-3 bg-white shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                            className="flex-shrink-0 border-2 border-slate-300 p-3 bg-white shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg"
                             style={{ minWidth: "200px" }}
                           >
-                            <div className="font-bold text-sm mb-2 border-b border-gray-300 pb-1">
+                            <div className="font-bold text-sm mb-2 border-b border-slate-200 pb-1 text-slate-800">
                               {formatDate(att.date)}
                             </div>
                             <div className="space-y-1 text-sm">
                               <div>
-                                <span className="font-medium">Check-in:</span>{" "}
+                                <span className="font-medium text-slate-700">
+                                  Check-in:
+                                </span>{" "}
                                 <span className="text-green-600">
                                   {formatTime(att.checkinTime)}
                                 </span>
                               </div>
                               <div>
-                                <span className="font-medium">Check-out:</span>{" "}
+                                <span className="font-medium text-slate-700">
+                                  Check-out:
+                                </span>{" "}
                                 <span className="text-red-600">
                                   {formatTime(att.checkoutTime)}
                                 </span>
@@ -361,7 +381,7 @@ export default function PIDetailPage() {
                     ?.attendances.filter(
                       (att) => att.checkinTime || att.checkoutTime,
                     ).length === 0 && (
-                    <p className="text-gray-500 text-center py-4">
+                    <p className="text-slate-500 text-center py-4">
                       No attendance records found for this month
                     </p>
                   )}

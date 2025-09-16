@@ -11,25 +11,26 @@ interface PIListProps {
 }
 
 const statusMap = {
-  complete: { icon: "✅", text: "Data Submitted", color: "#28a745" },
-  pending: { icon: "⚠️", text: "Submission Pending", color: "#ffc107" },
-  requested: { icon: "➡️", text: "Request Sent", color: "#17a2b8" },
-  none: { icon: "⚫", text: "No Request Sent", color: "#6c757d" },
+  complete: { icon: "✅", text: "Data Submitted", color: "#166534" }, // green-800
+  pending: { icon: "⚠️", text: "Submission Pending", color: "#92400e" }, // amber-700
+  requested: { icon: "➡️", text: "Request Sent", color: "#1e40af" }, // blue-800
+  none: { icon: "⚫", text: "No Request Sent", color: "#64748b" }, // slate-500
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
   piListContainer: {
     background: "white",
+    border: "2px solid #cbd5e1", // slate-300
     borderRadius: "8px",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+    boxShadow: "2px 2px 0px rgba(51, 65, 85, 0.1)",
     overflow: "hidden",
   },
   piListHeader: {
     display: "flex",
     alignItems: "center",
     padding: "1rem 1.5rem",
-    background: "#f8f9fa",
-    borderBottom: "1px solid #dee2e6",
+    background: "#f1f5f9", // slate-100
+    borderBottom: "2px solid #cbd5e1", // slate-300
   },
   headerCheckbox: {
     marginRight: "1rem",
@@ -38,17 +39,22 @@ const styles: { [key: string]: React.CSSProperties } = {
   headerTitle: {
     flex: 1,
     fontWeight: 600,
+    color: "#334155", // slate-700
   },
   headerStatus: {
     width: "200px",
     fontWeight: 600,
     textAlign: "left",
+    color: "#334155", // slate-700
   },
   piItem: {
     display: "flex",
     alignItems: "center",
     padding: "1rem 1.5rem",
-    borderBottom: "1px solid #dee2e6",
+    borderBottom: "1px solid #e2e8f0", // slate-200
+  },
+  piItemHover: {
+    backgroundColor: "#f8fafc", // slate-50
   },
   piItemCheckbox: {
     marginRight: "1rem",
@@ -66,9 +72,12 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   linkStyle: {
     textDecoration: "none",
-    color: "#007bff",
+    color: "#3b82f6", // blue-500
     fontWeight: 500,
     cursor: "pointer",
+  },
+  linkHover: {
+    color: "#1d4ed8", // blue-700
   },
 };
 
@@ -113,7 +122,16 @@ export default function PIList({
         const { icon, text, color } = statusMap[status];
 
         return (
-          <div key={pi} style={styles.piItem}>
+          <div
+            key={pi}
+            style={styles.piItem}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f8fafc"; // slate-50
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+            }}
+          >
             <input
               type="checkbox"
               style={styles.piItemCheckbox}
@@ -121,7 +139,16 @@ export default function PIList({
               onChange={() => handleSelectPI(pi)}
             />
             <div style={styles.piName}>
-              <Link href={`/dashboard/pi/${pi}`} style={styles.linkStyle}>
+              <Link
+                href={`/dashboard/pi/${pi}`}
+                style={styles.linkStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#1d4ed8"; // blue-700
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#3b82f6"; // blue-500
+                }}
+              >
                 {pi}
               </Link>
             </div>

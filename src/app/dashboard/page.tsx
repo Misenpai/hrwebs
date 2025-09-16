@@ -130,9 +130,9 @@ export default function DashboardPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-lime-200">
-        <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)]">
-          <p className="text-2xl font-bold">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="bg-white border-2 border-slate-700 p-8 shadow-[4px_4px_0px_rgba(51,65,85,0.3)] rounded-lg">
+          <p className="text-2xl font-bold text-slate-800">Loading...</p>
         </div>
       </div>
     );
@@ -143,15 +143,15 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-lime-200">
+    <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="container mx-auto p-6">
-        <div className="bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] p-6 mb-6">
+        <div className="bg-white border-2 border-slate-300 shadow-[4px_4px_0px_rgba(51,65,85,0.1)] p-6 mb-6 rounded-lg">
           <div className="flex flex-wrap gap-4 items-end">
             <div>
               <label
                 htmlFor="month-select"
-                className="block text-sm font-bold mb-2"
+                className="block text-sm font-bold mb-2 text-slate-700"
               >
                 Month
               </label>
@@ -161,7 +161,7 @@ export default function DashboardPage() {
                 onChange={(e) =>
                   setFilters((f) => ({ ...f, month: +e.target.value }))
                 }
-                className="border-2 border-black p-2 bg-white hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                className="border-2 border-slate-300 p-2 bg-white rounded hover:border-slate-400 focus:outline-none focus:border-slate-500"
               >
                 {Array.from({ length: 12 }, (_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
             <div>
               <label
                 htmlFor="year-select"
-                className="block text-sm font-bold mb-2"
+                className="block text-sm font-bold mb-2 text-slate-700"
               >
                 Year
               </label>
@@ -184,7 +184,7 @@ export default function DashboardPage() {
                 onChange={(e) =>
                   setFilters((f) => ({ ...f, year: +e.target.value }))
                 }
-                className="border-2 border-black p-2 bg-white hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                className="border-2 border-slate-300 p-2 bg-white rounded hover:border-slate-400 focus:outline-none focus:border-slate-500"
               >
                 <option value="2025">2025</option>
                 <option value="2024">2024</option>
@@ -195,14 +195,14 @@ export default function DashboardPage() {
               <button
                 onClick={handleRequestData}
                 disabled={selectedPIs.size === 0}
-                className="h-12 px-5 border-black border-2 bg-orange-200 hover:bg-orange-300 active:bg-orange-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] disabled:border-gray-400 disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:shadow-none font-bold"
+                className="h-12 px-5 border-slate-700 border-2 bg-blue-100 hover:bg-blue-200 active:bg-blue-300 hover:shadow-[2px_2px_0px_rgba(51,65,85,0.2)] disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-500 disabled:hover:shadow-none font-bold text-slate-800 rounded transition-all"
               >
                 Request Data
               </button>
               <button
                 onClick={handleDownloadReport}
                 disabled={!canDownload || selectedPIs.size === 0}
-                className="h-12 px-5 border-black border-2 bg-lime-200 hover:bg-lime-300 active:bg-lime-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] disabled:border-gray-400 disabled:bg-gray-200 disabled:text-gray-500 disabled:hover:shadow-none font-bold"
+                className="h-12 px-5 border-slate-700 border-2 bg-green-100 hover:bg-green-200 active:bg-green-300 hover:shadow-[2px_2px_0px_rgba(51,65,85,0.2)] disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-500 disabled:hover:shadow-none font-bold text-slate-800 rounded transition-all"
               >
                 Download Report
               </button>
@@ -211,8 +211,10 @@ export default function DashboardPage() {
         </div>
 
         {statusMessage && (
-          <div className="bg-cyan-200 border-2 border-black p-4 mb-6 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            <p className="font-bold text-center">{statusMessage}</p>
+          <div className="bg-blue-50 border-2 border-blue-300 p-4 mb-6 shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg">
+            <p className="font-bold text-center text-blue-800">
+              {statusMessage}
+            </p>
           </div>
         )}
 

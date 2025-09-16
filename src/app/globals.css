@@ -5,7 +5,7 @@
 }
 
 body {
-    background: #a6faff; /* cyan-200 */
+    background: #f8fafc; /* slate-50 */
     font-family:
         system-ui,
         -apple-system,
@@ -46,16 +46,16 @@ body {
 .attendance-card {
     min-width: 200px;
     flex-shrink: 0;
-    border: 2px solid black;
+    border: 2px solid #334155; /* slate-700 */
     padding: 12px;
     background: white;
-    box-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
+    box-shadow: 2px 2px 0px rgba(51, 65, 85, 0.3);
     transition: transform 0.2s;
 }
 
 .attendance-card:hover {
     transform: translateY(-2px);
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 1);
+    box-shadow: 4px 4px 0px rgba(51, 65, 85, 0.4);
 }
 
 /* Dashboard controls specific to PI detail page */
@@ -85,26 +85,26 @@ body {
 }
 
 .attendance-table th {
-    background-color: #f3f4f6;
+    background-color: #f1f5f9; /* slate-100 */
     font-weight: 600;
     text-align: left;
     padding: 0.75rem;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid #334155; /* slate-700 */
 }
 
 .attendance-table td {
     padding: 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e2e8f0; /* slate-200 */
 }
 
 .attendance-table tr:hover {
-    background-color: #f9fafb;
+    background-color: #f8fafc; /* slate-50 */
 }
 
 /* Status badges */
 .status-full-day {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: #dcfce7; /* green-100 */
+    color: #166534; /* green-800 */
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     font-size: 0.75rem;
@@ -112,8 +112,8 @@ body {
 }
 
 .status-half-day {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: #fef3c7; /* amber-100 */
+    color: #92400e; /* amber-700 */
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     font-size: 0.75rem;
@@ -121,8 +121,8 @@ body {
 }
 
 .status-in-progress {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: #f1f5f9; /* slate-100 */
+    color: #475569; /* slate-600 */
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     font-size: 0.75rem;
