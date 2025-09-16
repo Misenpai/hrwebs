@@ -47,22 +47,21 @@ export default function PIDetailPage() {
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear(),
   });
-  const [isClient, setIsClient] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Fix hydration issue by ensuring client-side rendering for dynamic content
   useEffect(() => {
-    setIsClient(true);
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !user && isMounted) {
       router.push("/");
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, isMounted]);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user || !piUsername || !isClient) return;
+      if (!user || !piUsername || !isMounted) return;
 
       setLoading(true);
       setError("");
@@ -96,7 +95,7 @@ export default function PIDetailPage() {
     };
 
     fetchData();
-  }, [user, piUsername, filters.month, filters.year, isClient]);
+  }, [user, piUsername, filters.month, filters.year, isMounted]);
 
   const handleDownload = async () => {
     try {
@@ -144,13 +143,15 @@ export default function PIDetailPage() {
     });
   };
 
-  // Show loading state while auth is checking or client is not ready
-  if (authLoading || !user || !isClient) {
+  if (!isMounted || authLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="bg-white border-2 border-slate-700 p-8 shadow-[4px_4px_0px_rgba(51,65,85,0.3)] rounded-lg">
-          <p className="text-2xl font-bold text-slate-800">Loading...</p>
-        </div>
+      <div className="min-h-screen bg-slate-50">
+        <Header />
+        <main className="container mx-auto p-6">
+          <div className="bg-white border-2 border-slate-700 p-8 shadow-[4px_4px_0px_rgba(51,65,85,0.3)] rounded-lg">
+            <p className="text-2xl font-bold text-slate-800">Loading...</p>
+          </div>
+        </main>
       </div>
     );
   }
@@ -159,7 +160,6 @@ export default function PIDetailPage() {
     <div className="min-h-screen bg-slate-50">
       <Header />
       <main className="container mx-auto p-6">
-        {/* Back button and title */}
         <div className="mb-6">
           <Link
             href="/dashboard"
@@ -172,7 +172,6 @@ export default function PIDetailPage() {
           </h1>
         </div>
 
-        {/* Controls */}
         <div className="flex gap-4 items-end mb-6">
           <div>
             <label
@@ -223,7 +222,6 @@ export default function PIDetailPage() {
           </button>
         </div>
 
-        {/* Loading/Error states */}
         {loading && (
           <div className="text-center py-8 text-slate-600">
             Loading attendance data...
@@ -235,10 +233,8 @@ export default function PIDetailPage() {
           </div>
         )}
 
-        {/* Main content */}
         {data && !loading && (
           <div className="space-y-6">
-            {/* Summary */}
             <div className="bg-blue-50 border-2 border-slate-300 p-4 shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg">
               <p className="text-lg font-bold text-slate-800">
                 Total Working Days in{" "}
@@ -252,7 +248,6 @@ export default function PIDetailPage() {
               </p>
             </div>
 
-            {/* Users table */}
             <div className="bg-white border-2 border-slate-300 shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg overflow-hidden">
               <div className="bg-slate-100 border-b-2 border-slate-300 p-4">
                 <h2 className="text-xl font-bold text-slate-800">
@@ -323,7 +318,6 @@ export default function PIDetailPage() {
               </div>
             </div>
 
-            {/* Selected user attendance details */}
             {selectedUser && (
               <div className="bg-white border-2 border-slate-300 shadow-[2px_2px_0px_rgba(51,65,85,0.1)] rounded-lg overflow-hidden">
                 <div className="bg-slate-100 border-b-2 border-slate-300 p-4">
@@ -375,7 +369,6 @@ export default function PIDetailPage() {
                     </div>
                   </div>
 
-                  {/* Show message if no attendance records */}
                   {data.users
                     .find((u) => u.username === selectedUser)
                     ?.attendances.filter(

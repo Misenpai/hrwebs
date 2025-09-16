@@ -23,12 +23,17 @@ export default function DashboardPage() {
     year: new Date().getFullYear(),
   });
   const [statusMessage, setStatusMessage] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && !user && isMounted) {
       router.push("/");
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, isMounted]);
 
   useEffect(() => {
     const fetchPIs = async () => {
@@ -41,11 +46,11 @@ export default function DashboardPage() {
         console.error("Failed to fetch PIs", error);
       }
     };
-    if (user) fetchPIs();
-  }, [user]);
+    if (user && isMounted) fetchPIs();
+  }, [user, isMounted]);
 
   useEffect(() => {
-    if (!user || pis.length === 0) return;
+    if (!user || pis.length === 0 || !isMounted) return;
 
     const fetchStatuses = async () => {
       try {
@@ -64,7 +69,7 @@ export default function DashboardPage() {
     const interval = setInterval(fetchStatuses, 5000);
 
     return () => clearInterval(interval);
-  }, [user, pis, filters.month, filters.year]);
+  }, [user, pis, filters.month, filters.year, isMounted]);
 
   const handleRequestData = async () => {
     if (selectedPIs.size === 0) return;
@@ -128,12 +133,15 @@ export default function DashboardPage() {
     }
   };
 
-  if (isLoading || !user) {
+  if (!isMounted || isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="bg-white border-2 border-slate-700 p-8 shadow-[4px_4px_0px_rgba(51,65,85,0.3)] rounded-lg">
-          <p className="text-2xl font-bold text-slate-800">Loading...</p>
-        </div>
+      <div className="min-h-screen bg-slate-50">
+        <Header />
+        <main className="container mx-auto p-6">
+          <div className="bg-white border-2 border-slate-700 p-8 shadow-[4px_4px_0px_rgba(51,65,85,0.3)] rounded-lg">
+            <p className="text-2xl font-bold text-slate-800">Loading...</p>
+          </div>
+        </main>
       </div>
     );
   }

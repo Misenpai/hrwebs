@@ -6,7 +6,6 @@ interface BaseApiResponse {
   error?: string;
 }
 
-// Specific response types
 interface ApiResponse<T = unknown> extends BaseApiResponse {
   data?: T;
   token?: string;
